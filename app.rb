@@ -13,7 +13,7 @@ end
 
 # home
 get '/' do
-
+  redirect to '/videos'
 end
 
 # index
@@ -23,6 +23,10 @@ end
 
 # show
 get '/videos/:id' do
+
+end
+
+get '/videos/new' do
 
 end
 
