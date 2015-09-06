@@ -23,6 +23,10 @@ get '/videos' do
   erb :index
 end
 
+get '/videos/new' do
+  erb :new
+end
+
 # show
 get '/videos/:id' do
   # binding.pry
@@ -32,23 +36,32 @@ get '/videos/:id' do
   erb :player
 end
 
-get '/videos/new' do
-
-end
-
 # create
 post '/videos' do
+  sql = "insert into videos (title, dscr, url) values ('#{params[:title]}','#{params[:dscr]}','#{params[:url]}') returning *"
+  @addvid = @db.exec(sql).first
 
+  newsql = "SELECT id FROM videos WHERE url = '#{params[:url]}'"
+  newid = @db.exec(newsql).first
+  # binding.pry
+  redirect to "/videos/#{newid['id']}"
 end
 
 # edit
 get '/videos/:id/edit' do
-
+  sql = "SELECT * FROM videos WHERE id = #{params[:id]}"
+  @editvid = @db.exec(sql).first
+  erb :edit
 end
 
 # update
 post '/videos/:id' do
+  sql = "UPDATE videos SET title = '#{params[:title]}', dscr = '#{params[:dscr]}', url = '#{params[:url]}' WHERE id = '#{params[:id]}'"
+  @db.exec(sql)
 
+  newsql = "SELECT id FROM videos WHERE url = '#{params[:url]}'"
+  newid = @db.exec(newsql)
+  redirect to "/videos/#{newid['id']}"
 end
 
 # delete
